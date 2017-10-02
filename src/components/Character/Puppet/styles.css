@@ -1,0 +1,60 @@
+.Puppet {
+  position: absolute;
+  left: 50%; top: calc(50% + .5em);
+
+  font-size: 1.5em;
+}
+
+.Puppet-foot,
+.Puppet-hand,
+.Puppet-body,
+.Puppet-head {
+  position: absolute;
+  border-radius: 100%;
+  background-image: radial-gradient(circle at 33% 33%, #fcfcfc, #fafafa, #ddd, #bbb);
+}
+
+.Puppet-foot,
+.Puppet-hand {
+  width: .5em; height: .5em;
+}
+
+.Puppet-foot:nth-of-type(1) { left: -.5em; top: .625em; }
+.Puppet-foot:nth-of-type(4) { left: .0em; top: .875em; }
+
+.Puppet-hand:nth-of-type(2) { left: -1em; top: -.5em; }
+.Puppet-hand:nth-of-type(5) { left: .5em; top: .25em; }
+
+.Puppet-body {
+  left: -1em; top: -1em;
+  width: 2em; height: 2em;
+}
+
+.Puppet-head {
+  left: -.75em; top: -1.5em;
+  width: 1.5em; height: 1.5em;
+}
+
+.Puppet-head::before,
+.Puppet-head::after {
+  content: '';
+  position: absolute;
+
+  width: .5em;
+  height: .5em;
+
+  border-radius: 100%;
+  background-image: radial-gradient(circle at 33% 33%, #fff, #333, #222, #000);
+}
+
+.Puppet-head::before { left: -.25em; top: .25em; }
+.Puppet-head::after { left: .25em; top: .5em; }
+
+.Puppet.idle .Puppet-head { animation: Puppet-idle 1s .25s infinite alternate; }
+.Puppet.idle .Puppet-body { animation: Puppet-idle 1s infinite alternate; }
+.Puppet.idle .Puppet-hand { animation: Puppet-idle 1s .125s infinite alternate; }
+
+@keyframes Puppet-idle {
+  from { transform: translate(0, -.125em); }
+  to { transform: translate(0, .125em); }
+}
