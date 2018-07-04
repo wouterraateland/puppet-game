@@ -1,0 +1,52 @@
+{
+  "size": {
+    "width": 8,
+    "height": 8
+  },
+  "tiles": [
+    [1, 1, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 1, 1, 1, 1],
+    [0, 1, 0, 1, 1, 1, 0, 1],
+    [0, 0, 0, 1, 1, 1, 1, 1]
+  ],
+  "objects": [
+    {
+      "type": 0,
+      "position": [0, 0],
+      "direction": 0,
+      "properties": {
+        "team": 0,
+        "character": {
+          "name": "han",
+          "health": 30,
+          "maxHealth": 30,
+          "speed": 3
+        }
+      }
+    },
+    {
+      "type": 0,
+      "position": [7, 7],
+      "direction": 0,
+      "properties": {
+        "team": 1,
+        "character": {
+          "name": "luke",
+          "health": 25,
+          "maxHealth": 25,
+          "speed": 4
+        }
+      }
+    },
+    {
+      "type": 1,
+      "position": [1, 6],
+      "direction": 0,
+      "properties": {}
+    }
+  ]
+}

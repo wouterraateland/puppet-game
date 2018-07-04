@@ -1,0 +1,39 @@
+.Character {
+  position: absolute;
+
+  width: 4em;
+  height: 4em;
+  border-radius: 2em;
+
+  background-image:
+    radial-gradient(ellipse 1.20em 0.70em at 50% 10%, transparent 99%, rgba(0, 0, 0, .25)),
+    radial-gradient(ellipse 1.85em 1.10em at 50% 25%, transparent 99%, rgba(0, 0, 0, .50)),
+    radial-gradient(ellipse 2.20em 1.60em at 50% 40%, transparent 99%, rgba(0, 0, 0, .75));
+
+  transform: translate(-2em, -4em);
+}
+
+.Character-name {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  bottom: 110%;
+
+  padding: .5em;
+  border-radius: .5em;
+
+  white-space: nowrap;
+
+  background-color: #000;
+  color: #fff;
+
+  opacity: 0;
+
+  transform: translate(-50%, 0);
+
+  transition: opacity .2s ease-out;
+}
+
+.Character:hover .Character-name {
+  opacity: 1;
+}

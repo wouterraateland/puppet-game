@@ -1,0 +1,128 @@
+.Map {
+  position: absolute;
+  left: 50%; top: 50%;
+
+  border-radius: 2em;
+
+  background-color: #03a9f4;
+
+  transform: translate(-50%, -50%) scale(1, .5) rotate(45deg);
+}
+
+.Map::after {
+  pointer-events: none;
+  content: '';
+
+  position: absolute;
+  left: 0; top: 0;
+  right: 0; bottom: 0;
+
+  border-radius: 2em;
+
+  box-shadow:
+    0.5em 0.5em rgba(0, 0, 0, 0.75),
+    1.0em 1.0em rgba(0, 0, 0, 0.50),
+    1.5em 1.5em rgba(0, 0, 0, 0.25);
+}
+
+.Map-tile {
+  position: absolute;
+
+  border-radius: 2em;
+  box-shadow:
+    0 0 0 .02em #8BC34A,
+    0.5em 0.5em #1B5E20,
+    1.0em 1.0em rgba(0, 0, 0, .25),
+    1.5em 1.5em rgba(0, 0, 0, .125);
+
+  background-color: #8BC34A;
+
+  transform: translate(-.5em, -.5em);
+}
+
+.Map-tile.cl {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.Map-tile.ct {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.Map-tile.cr {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.Map-tile.cb {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.Map-object {
+  position: absolute;
+
+  width: 0;
+  height: 0;
+
+  transform: rotate(-45deg) scale(1, 2);
+
+  transition-property: left, top;
+  transition-duration: .2s;
+  transition-timing-function: ease-in-out;
+}
+
+.Map-object::before {
+  pointer-events: none;
+  content: '';
+
+  position: absolute;
+  left: 50%; top: 50%;
+
+  border: 1em solid transparent;
+  border-right-width: 0;
+  border-left: 4em solid purple;
+
+  transform-origin: 0 50%;
+  transform: translate(0, -50%) scale(1, .5) rotate(45deg);
+
+  transition: transform .2s ease-in-out;
+}
+
+.Map-object.direction-1::before { transform: translate(0, -50%) scale(1, .5) rotate(45deg) rotate(90deg); }
+.Map-object.direction-2::before { transform: translate(0, -50%) scale(1, .5) rotate(45deg) rotate(180deg); }
+.Map-object.direction-3::before { transform: translate(0, -50%) scale(1, .5) rotate(45deg) rotate(270deg); }
+
+.Map-overlay-tile {
+  position: absolute;
+
+  transform: translate(-.5em, -.5em);
+}
+
+.Map-overlay-tile::after {
+  content: '';
+
+  display: block;
+  width: 3em;
+  height: 3em;
+  margin: .5em;
+
+  border: .5em solid;
+  border-color: #000 #fff #000 #fff;
+  border-radius: 2em;
+
+  animation: rotate 8s linear infinite;
+}
+
+.Map-movement-path {
+  pointer-events: none;
+  position: absolute;
+  background: #a3b;
+
+  transform: translate(-.5em, -.5em);
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,40 @@
+.Tree {
+  position: absolute;
+  left: -.5em;
+  bottom: 0;
+
+  width: 1em;
+  height: 4em;
+
+  border-bottom-left-radius: .5em .25em;
+  border-bottom-right-radius: .5em .25em;
+
+  background-color: #795548;
+}
+
+.Tree::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 0;
+
+  width: 6em;
+  height: 4em;
+  border-radius: 250px 750px 250px 750px / 750px 250px 750px 250px;
+
+  box-shadow: inset 0 -1em 0 -.5em #006064;
+
+  background-color: #009688;
+
+  transform: translate(-50%, -50%);
+
+  animation: wobble 12s ease-in-out infinite alternate;
+}
+
+@keyframes wobble {
+  50% {
+    border-radius: 750px 550px 350px 750px / 350px 750px 550px 450px;
+  }
+  100% {
+    border-radius: 750px 250px 750px 250px / 250px 750px 250px 750px;
+  }
+}

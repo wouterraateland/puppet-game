@@ -1,31 +1,35 @@
 import React from 'react'
-import { render } from 'react-dom'
+import { hydrate, render } from 'react-dom'
 import { Provider } from 'react-redux'
 
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter } from 'react-router-redux'
-import { Route } from 'react-router'
-import registerServiceWorker from './registerServiceWorker'
+// import registerServiceWorker from './registerServiceWorker'
 import configureStore from './store'
 
 import App from 'components/App'
 
-import './reset.css'
-import './index.css'
+import 'reset.css'
 
 const history = createHistory()
-const initialState = {}
+const initialState = {
+	router: { location: history.location }
+}
 const store = configureStore(initialState, history)
 
-render(
+const Root = (
 	<Provider store={store}>
-    <ConnectedRouter history={history}>
-      <div>
-        <Route component={App} />
-      </div>
-    </ConnectedRouter>
-	</Provider>,
-	document.getElementById('root')
+		<ConnectedRouter history={history}>
+      <App/>
+		</ConnectedRouter>
+	</Provider>
 )
+const root = document.getElementById('root')
 
-registerServiceWorker()
+if (root.hasChildNodes()) {
+	hydrate(Root, root)
+} else {
+	render(Root, root)
+}
+
+// registerServiceWorker()
