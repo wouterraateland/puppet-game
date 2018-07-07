@@ -5,7 +5,6 @@ import characters from './characters'
 import hud from './hud'
 import map from './map'
 import movementPath from './movementPath'
-import fighters from './fighters'
 
 export default combineReducers({
   battle,
@@ -13,5 +12,4 @@ export default combineReducers({
   hud,
   map,
   movementPath,
-  fighters,
 })

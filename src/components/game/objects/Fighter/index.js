@@ -1,16 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
+
 import Character from 'components/game/Character'
 
-import * as MovementPath from 'ducks/game/movementPath'
+import { startMovementPath } from 'ducks/game/movementPath'
+import { isCurrentFighter } from 'selectors/battle'
 
 const teamColors = [
   '#f00',
   '#00f',
 ]
 
-const Fighter = ({ direction, properties, onMouseDown }) => (
-  <div onMouseDown={onMouseDown}>
+const Fighter = ({ active, direction, properties, onMouseDown }) => (
+  <div onMouseDown={active ? onMouseDown : _.noop}>
     <Character
       stats={properties.character}
       color={teamColors[properties.team]}
@@ -19,14 +22,14 @@ const Fighter = ({ direction, properties, onMouseDown }) => (
   </div>
 )
 
-const mapStateToProps = (state) => ({
-
+const mapStateToProps = (state, props) => ({
+  active: isCurrentFighter(state, props.id) && state.game.battle.chosenAction === "MOVE",
 })
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch, {position}) => ({
   onMouseDown: (event) => {
     event.preventDefault()
-    dispatch(MovementPath.start(ownProps.position))
+    dispatch(startMovementPath(position))
   }
 })
 

@@ -1,22 +1,31 @@
-import { take, call, select, put, race } from 'redux-saga/effects'
+import { take, call, select, put } from 'redux-saga/effects'
 
-import * as Battle from 'ducks/game/battle'
-import * as Hud from 'ducks/game/hud'
-import * as Fighter from 'ducks/game/fighter'
+import { CHOSE_ACTION, setPossibleLocations, executeAction, endTurn } from 'ducks/game/battle'
+import { MOVE } from 'ducks/game/map'
 
-import { getCurrentFighter, isBattleOver } from 'selectors/battle'
+import { getCurrentFighter, isBattleOver, getCurrentMovementOptions } from 'selectors/battle'
 
 function* playerTurnSaga(fighter) {
-  yield put(Hud.showPlayerControls())
-
   while (true) {
-    const {move, action, end} = yield race({
-      move:   take(Fighter.MOVE),
-      action: take(Fighter.ACT),
-      end:    take(Battle.TURN_END),
-    })
+    const action = yield take(CHOSE_ACTION)
 
-    if (end) { return true }
+    switch (action.payload) {
+      case 'MOVE':
+        const locations = yield select(getCurrentMovementOptions)
+        yield put(setPossibleLocations(locations))
+        yield take(MOVE.COMPLETE)
+        yield put(executeAction('MOVE'))
+        break
+      case 'ACT':
+        yield put(executeAction('ACT'))
+        break
+      case 'END_TURN':
+        yield put(executeAction())
+        yield put(endTurn())
+        return
+      default:
+        yield put(executeAction())
+    }
   }
 }
 
@@ -30,15 +39,14 @@ export function* fighterTurnSaga(fighter) {
 }
 
 export function* battleSaga() {
-  while(true) {
+  let battleOver = false
+  while (!battleOver) {
     const fighter = yield select(getCurrentFighter)
     console.log(fighter)
 
     yield call(fighterTurnSaga, fighter)
 
-    const battleOver = yield select(isBattleOver)
-
-    if (battleOver) { return true }
+    // battleOver = yield select(isBattleOver)
   }
 }
 

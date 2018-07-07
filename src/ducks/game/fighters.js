@@ -1,48 +1,46 @@
 import { combineReducers } from 'redux'
-import { createReducer } from 'utilities/ducks'
+import { createAction, handleActions } from 'redux-actions'
 import uuidv4 from 'uuid/v4'
 
 import fighter from './fighter'
 
 // Action types
-export const SPAWN = 'fighters/SPAWN'
+export const SPAWN_FIGHTER = 'SPAWN_FIGHTER'
 
 // Action creators
-export const spawn = (character) => ({
-  type: SPAWN,
-  fighter: {
-    id: uuidv4(),
-    characterId: character.id,
-    health: character.properties.health,
-  },
-})
+export const spawnFighter = createAction(SPAWN_FIGHTER, ({character, ...rest}) => ({
+  id: uuidv4(),
+  health: character.health,
+  character,
+  ...rest
+}))
 
 // Reducers
 export const byId = (state={}, action) => {
   switch (action.type) {
-    case SPAWN:
+    case SPAWN_FIGHTER:
       return {
         ...state,
-        [action.fighter.id]: action.fighter
+        [action.payload.id]: action.payload
       }
     default:
       break;
   }
 
-  if (action.type.startsWith('fighter/') && action.id) {
+  if (action.type.startsWith('fighter/') && action.payload.id) {
     return {
       ...state,
-      [action.id]: fighter(state[action.id], action)
+      [action.payload.id]: fighter(state[action.payload.id], action)
     }
   }
 
   return state
 }
 
-export const allIds = createReducer([], {
-  [SPAWN]: (state, action) =>
-    [...state, action.fighter.id],
-})
+export const allIds = handleActions({
+  SPAWN_FIGHTER: (state, action) =>
+    [...state, action.payload.id],
+}, [])
 
 export const reducer = combineReducers({
   byId, allIds

@@ -1,5 +1,9 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { connect } from 'react-redux'
+
+import { choseAction } from 'ducks/game/battle'
+import { isActionExecuted } from 'selectors/battle'
 
 const Action = styled.div`
   display: inline-block;
@@ -13,8 +17,23 @@ const Action = styled.div`
 
   background-color: #000;
   color: #fff;
+
+  ${props => props.disabled && css`
+    opacity: .5;
+  `}
 `
 
-export default ({ name, icon, onClick }) => (
-  <Action onClick={onClick}>{name}</Action>
-)
+const mapStateToProps = (state,props) => ({
+  disabled: isActionExecuted(state,props.name),
+})
+
+const mapDispatchToProps = (dispatch, props) => ({
+  onClick: () => dispatch(choseAction(props.name)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({ name, icon, onClick, disabled }) => (
+  <Action onClick={disabled ? () => {} : onClick} disabled={disabled}>{name}</Action>
+))

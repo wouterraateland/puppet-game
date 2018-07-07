@@ -1,5 +1,6 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { connect } from 'react-redux'
 
 import Action from './Action'
 
@@ -9,12 +10,25 @@ const ActionBar = styled.div`
   right: 0; bottom: 1em;
 
   text-align: center;
+  pointer-events: auto;
+
+  transition: bottom .2s ease-in-out;
+
+  ${props => props.disabled && css`
+    bottom: -10em;
+  `}
 `
 
-export default ({ move, takeAction, endTurn}) => (
-  <ActionBar>
-    <Action name="Move" onClick={move} />
-    <Action name="Act" onClick={takeAction} />
-    <Action name="End turn" onClick={endTurn} />
+const mapStateToProps = state => ({
+  isPlayerTurn: true,
+})
+
+export default connect(
+  mapStateToProps
+)(({ isPlayerTurn }) => (
+  <ActionBar disabled={!isPlayerTurn}>
+    <Action name="MOVE" />
+    <Action name="ACT" />
+    <Action name="END_TURN" />
   </ActionBar>
-)
+))

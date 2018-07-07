@@ -5,6 +5,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "history": "^4.7.2",
+    "lodash": "^4.17.10",
     "priorityqueue": "^0.2.0",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
@@ -13,6 +14,7 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "react-scripts": "1.0.14",
     "redux": "^3.7.2",
+    "redux-actions": "^2.4.0",
     "redux-devtools-extension": "^2.13.5",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.15.6",

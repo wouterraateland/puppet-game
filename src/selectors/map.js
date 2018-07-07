@@ -9,6 +9,11 @@ const isNeighbour = (tile) => ({ position }) =>
 const getMap = state => state.game.map
 const getPosition = (_, { position }) => position
 
+export const getMapSize = createSelector(
+  getMap,
+  map => map.size
+)
+
 export const getMapTiles = createSelector(
   getMap,
   map => map.tiles
@@ -61,13 +66,13 @@ export const getConnectedSides = createSelector(
   [getConnectedTiles, getPosition],
   (tiles, pos) => tiles.reduce((acc, { position }) => {
     if (position.x === pos.x) {
-      if (position.y - pos.y ===  1) { return [...acc, 'cb'] }
-      if (position.y - pos.y === -1) { return [...acc, 'ct'] }
+      if (position.y - pos.y ===  1) { return {...acc, bottom: true } }
+      if (position.y - pos.y === -1) { return {...acc, top: true } }
     }
     if (position.y === pos.y) {
-      if (position.x - pos.x ===  1) { return [...acc, 'cr'] }
-      if (position.x - pos.x === -1) { return [...acc, 'cl'] }
+      if (position.x - pos.x ===  1) { return {...acc, right: true } }
+      if (position.x - pos.x === -1) { return {...acc, left: true } }
     }
     return acc
-  }, [])
+  }, { left: false, top: false, right: false, bottom: false })
 )

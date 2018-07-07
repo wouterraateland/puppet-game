@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import { Fighter, Tree } from 'components/game/objects'
 
@@ -20,16 +21,42 @@ const renderObject = (type, props) => {
   }
 }
 
-const MapObject = ({ type, position, direction, ...rest }) =>  (
-  <div
-    className={`Map-object direction-${direction}`}
-    style={{
-      left: (position.x + .5) * TILE_SIZE,
-      top: (position.y + .5) * TILE_SIZE,
-    }}
-  >
-    {renderObject(type, { position, direction, ...rest })}
-  </div>
-)
+const MapObject = styled.div`
+  position: absolute;
+  left: ${props => (props.position.x + .5) * TILE_SIZE}px;
+  top: ${props => (props.position.y + .5) * TILE_SIZE}px;
 
-export default MapObject
+  z-index: ${props => props.position.x + props.position.y};
+
+  width: 0;
+  height: 0;
+
+  transform: rotate(-45deg) scale(1, 2);
+
+  transition-property: left, top;
+  transition-duration: .2s;
+  transition-timing-function: ease-in-out;
+
+  &::before {
+    pointer-events: none;
+    content: '';
+
+    position: absolute;
+    left: 50%; top: 50%;
+
+    border: 1em solid transparent;
+    border-right-width: 0;
+    border-left: 4em solid purple;
+
+    transform-origin: 0 50%;
+    transform: translate(0, -50%) scale(1, .5) rotate(${props => 45 + 90*props.direction}deg);
+
+    transition: transform .2s ease-in-out;
+  }
+`
+
+export default ({ type, position, direction, ...rest }) =>  (
+  <MapObject position={position} direction={direction}>
+    {renderObject(type, { position, direction, ...rest })}
+  </MapObject>
+)

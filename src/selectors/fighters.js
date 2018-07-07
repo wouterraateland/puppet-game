@@ -3,25 +3,30 @@ import { createSelector } from 'reselect'
 import * as battle from 'selectors/battle'
 import * as map from 'selectors/map'
 
-export const get = createSelector(
+export const getFighters = createSelector(
   map.getMapObjects,
   objects => objects.filter(object => object.type === 0)
 )
 
-export const getSorted = createSelector(
-  get,
+export const getFightersSorted = createSelector(
+  getFighters,
   fighters => fighters.sort((a, b) =>
     b.properties.character.speed - a.properties.character.speed)
 )
 
-export const getCurrent = createSelector(
-  [getSorted, battle.getCurrentTurn],
+export const getFighterCharactersSorted = createSelector(
+  getFightersSorted,
+  fighters => fighters.map(fighter => fighter.properties.character)
+)
+
+export const getCurrentFighter = createSelector(
+  [getFightersSorted, battle.getCurrentTurn],
   (fighters, currentTurn) =>
     fighters[currentTurn % fighters.length]
 )
 
 export const getCurrentMovementOptions = createSelector(
-  [getCurrent, map.getGraph, map.getMapTilePositions],
+  [getCurrentFighter, map.getGraph, map.getMapTilePositions],
   (fighter, graph, tilePositions) =>
   fighter
     ? graph

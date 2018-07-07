@@ -1,48 +1,37 @@
 import { combineReducers } from 'redux'
 import { Vec3 } from 'utilities'
-import { createAsyncActionType, createReducer } from 'utilities/ducks'
-
-// Misc
-const getDirection = (p1, p2) =>
-  (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 2 / Math.PI + 4) % 4
+import { createAsyncActionType } from 'utilities/ducks'
+import { createActions, handleActions } from 'redux-actions'
 
 // Action types
-export const LOAD = createAsyncActionType('map/LOAD')
-export const MOVE = createAsyncActionType('map/MOVE', ['REQUEST', 'STEP', 'COMPLETE'])
+export const LOAD_MAP = createAsyncActionType('LOAD_MAP')
+export const MOVE = createAsyncActionType('MOVE', ['REQUEST', 'STEP', 'COMPLETE'])
 
 // Action creators
-export const load = (mapName) => ({
-  type: LOAD.REQUEST,
-  mapName,
-})
-
-export const loadSuccessfull = (size, tiles, objects) => ({
-  type: LOAD.SUCCESS,
-  size, tiles, objects,
-})
-
-export const moveObject = (objectId, path) => ({
-  type: MOVE.REQUEST,
-  objectId, path,
-})
-
-export const moveObjectStep = (objectId, position) => ({
-  type: MOVE.STEP,
-  objectId, position,
-})
-
-export const moveObjectComplete = (objectId) => ({
-  type: MOVE.COMPLETE,
-  objectId,
-})
+export const {
+  loadMapRequest,
+  loadMapSuccess,
+  loadMapFailure,
+  moveRequest,
+  moveStep,
+  moveComplete
+} = createActions(
+  {},
+  LOAD_MAP.REQUEST,
+  LOAD_MAP.SUCCESS,
+  LOAD_MAP.FAILURE,
+  MOVE.REQUEST,
+  MOVE.STEP,
+  MOVE.COMPLETE
+)
 
 // Reducers
-export const size = createReducer([], {
-  [LOAD.SUCCESS]: (state, { size }) => size
-})
+export const size = handleActions({
+  [LOAD_MAP.SUCCESS]: (state, { payload: { size }}) => size
+}, [])
 
-export const tiles = createReducer([], {
-  [LOAD.SUCCESS]: (state, { tiles }) => tiles
+export const tiles = handleActions({
+  [LOAD_MAP.SUCCESS]: (state, { payload: { tiles }}) => tiles
     .reduce((tiles, row, y) => [
       ...tiles,
       ...row.reduce((acc, type, x) => type === 0
@@ -52,10 +41,10 @@ export const tiles = createReducer([], {
           { type, position: new Vec3(x, y, 0) }
         ], [])
     ], []),
-})
+}, [])
 
-export const byId = createReducer({}, {
-  [LOAD.SUCCESS]: (state, { objects }) =>
+export const byId = handleActions({
+  [LOAD_MAP.SUCCESS]: (state, { payload: { objects }}) =>
     objects.reduce((acc, object) => ({
       ...acc,
       [object.id]: {
@@ -63,7 +52,7 @@ export const byId = createReducer({}, {
         position: new Vec3(...object.position, 0),
       }
     }), {}),
-  [MOVE.STEP]: (state, { objectId, position }) => ({
+  [MOVE.STEP]: (state, { payload: { objectId, position }}) => ({
     ...state,
     [objectId]: {
       ...state[objectId],
@@ -71,12 +60,12 @@ export const byId = createReducer({}, {
       direction: getDirection(state[objectId].position, position)
     }
   })
-})
+}, {})
 
-export const allIds = createReducer([], {
-  [LOAD.SUCCESS]: (state, { objects }) =>
+export const allIds = handleActions({
+  [LOAD_MAP.SUCCESS]: (state, { payload: { objects }}) =>
     objects.map(object => object.id),
-})
+}, [])
 
 export const objects = combineReducers({
   byId, allIds
@@ -87,3 +76,7 @@ export const reducer = combineReducers({
 })
 
 export default reducer
+
+// Misc
+const getDirection = (p1, p2) =>
+  (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 2 / Math.PI + 4) % 4

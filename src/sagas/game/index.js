@@ -1,4 +1,4 @@
-import { all, fork, take } from 'redux-saga/effects'
+import { all, fork } from 'redux-saga/effects'
 
 import mapSaga from './map'
 import movementPathSaga from './movementPath'

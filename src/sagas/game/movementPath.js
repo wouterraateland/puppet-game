@@ -1,13 +1,18 @@
 import { delay } from 'redux-saga'
-import { take, takeEvery, takeLatest, select, put, all } from 'redux-saga/effects'
+import { take, takeEvery, select, put, all } from 'redux-saga/effects'
 import { createElementEventChannel } from 'utilities/sagas'
 
-import * as MovementPath from 'ducks/game/movementPath'
+import {
+  START_MOVEMENT_PATH,
+  EDIT_MOVEMENT_PATH,
+  editMovementPathFailure,
+  editMovementPathSuccess,
+  stopMovementPath } from 'ducks/game/movementPath'
 import * as Map from 'ducks/game/map'
 
 import { getMovementPath } from 'selectors/movementPath'
 import { getGraph } from 'selectors/map'
-import { getCurrent } from 'selectors/fighters'
+import { getCurrentFighter } from 'selectors/battle'
 
 const getEditedPath = (path, position, graph, speed) => {
   if (!path.length) {
@@ -29,45 +34,45 @@ const getEditedPath = (path, position, graph, speed) => {
   }
 }
 
-export function* editMovementPath({ position }) {
+export function* editMovementPath(action) {
   const path = yield select(getMovementPath)
   const graph = yield select(getGraph)
-  const fighter = yield select(getCurrent)
+  const fighter = yield select(getCurrentFighter)
 
   try {
-    const newPath = getEditedPath(path, position, graph, fighter.properties.character.speed)
-    yield put(MovementPath.editSuccess(newPath))
+    const newPath = getEditedPath(path, action.payload, graph, fighter.properties.character.speed)
+    yield put(editMovementPathSuccess(newPath))
   } catch (e) {
-    yield put(MovementPath.editFailure(e))
+    yield put(editMovementPathFailure(e))
   }
 }
 
-export function* stopMovementPath(event) {
+export function* stop(event) {
   const path = yield select(getMovementPath)
-  const object = yield select(getCurrent)
+  const object = yield select(getCurrentFighter)
 
-  yield put(MovementPath.stop())
-  yield put(Map.moveObject(object.id, path))
+  yield put(stopMovementPath())
+  yield put(Map.moveRequest({ objectId: object.id, path }))
 }
 
 export function* listenForMouseUp() {
   const channel = createElementEventChannel(window, 'mouseup')
   yield take(channel)
-  yield stopMovementPath()
+  yield stop()
 }
 
-export function* moveObject({ objectId, path }) {
+export function* moveObject({payload: { objectId, path }}) {
   for (let position of path) {
-    yield put(Map.moveObjectStep(objectId, position))
+    yield put(Map.moveStep({objectId, position}))
     yield delay(100)
   }
-  yield put(Map.moveObjectComplete(objectId))
+  yield put(Map.moveComplete(objectId))
 }
 
 export function* movementPathSaga() {
   yield all([
-    takeEvery(MovementPath.START, listenForMouseUp),
-    takeEvery(MovementPath.EDIT.REQUEST, editMovementPath),
+    takeEvery(START_MOVEMENT_PATH, listenForMouseUp),
+    takeEvery(EDIT_MOVEMENT_PATH.REQUEST, editMovementPath),
     takeEvery(Map.MOVE.REQUEST, moveObject)
   ])
 }
