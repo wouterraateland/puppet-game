@@ -37,22 +37,23 @@ const MapObject = styled.div`
   transition-duration: .2s;
   transition-timing-function: ease-in-out;
 
-  &::before {
+  ${'' /* &::before {
     pointer-events: none;
     content: '';
 
     position: absolute;
-    left: 50%; top: 50%;
+    left: 0; top: -1em;
 
     border: 1em solid transparent;
     border-right-width: 0;
     border-left: 4em solid purple;
 
     transform-origin: 0 50%;
-    transform: translate(0, -50%) scale(1, .5) rotate(${props => 45 + 90*props.direction}deg);
+    transform: scale(1, .5) rotate(${props => 45 + 90*props.direction}deg);
+    transform: rotate(${props => 90*props.direction}deg);
 
     transition: transform .2s ease-in-out;
-  }
+  } */}
 `
 
 export default ({ type, position, direction, ...rest }) =>  (
